@@ -37,12 +37,13 @@ namespace Contrib.Podcasts.Controllers {
     public ActionResult Index(PagerParameters pagerParameters) {
       // create a pager control to list the people
       Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+
       var personCount = _personRepository.Table.Count();
       var people = _personRepository.Table.Skip((pager.Page - 1) * pager.PageSize);
       var pagerShape = Shape.Pager(pager).TotalItemCount(personCount);
 
       var viewModel = new PeopleViewModel {
-        Pager = pager,
+        Pager = pagerShape,
         People = people
       };
 
@@ -108,7 +109,7 @@ namespace Contrib.Podcasts.Controllers {
       // get the episodes the person has been a guest on (or empty collection if none)
       viewModel.EpisodesGuested = _orchardServices.ContentManager.GetMany<PodcastEpisodePart>(
           person.PodcastEpisodes.Where(p => p.IsHost == false)
-                .Select(p => p.PodcastEpisodePartRecord.Id), VersionOptions.Published, QueryHints.Empty) 
+                .Select(p => p.PodcastEpisodePartRecord.Id), VersionOptions.Published, QueryHints.Empty)
         ?? new List<PodcastEpisodePart>();
 
       // build the view
