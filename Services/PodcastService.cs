@@ -51,10 +51,11 @@ namespace Contrib.Podcasts.Services {
       part.Rating = viewModel.Rating;
       part.CreativeCommonsLicense = viewModel.License;
       part.IncludeTranscriptInFeed = viewModel.IncludeEpisodeTranscriptInFeed;
+      part.Description = viewModel.Description;
 
       // get list of all hosts currently in the DB for this podcast
       var oldHosts = _podcastHostRespository.Fetch(host => host.PodcastPartRecord.Id == part.Id).Select(r => r.PersonRecord.Id).ToList();
-      
+
       // remove all the hosts not in the new list from the DB
       IEnumerable<int> hostsToRemove = viewModel.Hosts == null
         ? (IEnumerable<int>)oldHosts
@@ -65,7 +66,7 @@ namespace Contrib.Podcasts.Services {
                                                         record.PodcastPartRecord.Id == part.Id);
         _podcastHostRespository.Delete(hostToRemove);
       }
-      
+
       // add all new hosts not in the DB that are in the new list
       foreach (var newHostId in viewModel.Hosts.Except(oldHosts)) {
         var host = _personRepository.Get(newHostId);
