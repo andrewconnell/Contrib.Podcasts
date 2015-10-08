@@ -98,6 +98,8 @@
     <Compile Include="Drivers\PodcastEpisodePartDriver.cs" />
     <Compile Include="Drivers\RecentPodcastEpisodesDriver.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Feeds\EpisodesOnFeedQuery.cs" />
+    <Compile Include="Feeds\PodcastEpisodeFeedItemBuilder.cs" />
     <Compile Include="Handlers\PodcastEpisodeHandler.cs" />
     <Compile Include="Handlers\RecentPodcastEpisodesHandler.cs" />
     <Compile Include="Models\RecentPodcastEpisodesPart.cs" />
