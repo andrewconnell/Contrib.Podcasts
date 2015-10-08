@@ -5,8 +5,6 @@ using Orchard.Tokens;
 
 namespace Contrib.Podcasts.Providers {
   public class PodcastTokens : ITokenProvider {
-    private readonly IContentManager _contentManager;
-
     public PodcastTokens() {
       T = NullLocalizer.Instance;
     }

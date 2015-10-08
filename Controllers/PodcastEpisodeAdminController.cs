@@ -8,7 +8,7 @@ using Contrib.Podcasts.Services;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Contents.Controllers;
+using Orchard.Mvc;
 using Orchard.Core.Contents.Settings;
 using Orchard.Data;
 using Orchard.Localization;
