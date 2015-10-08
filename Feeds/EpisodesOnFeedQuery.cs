@@ -1,4 +1,5 @@
 using System;
+using System.Xml.Linq;
 using JetBrains.Annotations;
 using Contrib.Podcasts.Models;
 using Orchard.ContentManagement;
@@ -7,7 +8,6 @@ using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.StandardBuilders;
 using System.Collections.Generic;
 using Orchard.Services;
-using System.Xml.Linq;
 using System.Web.Mvc;
 using Orchard.Core.Common.Models;
 using Orchard.Utility.Extensions;
@@ -15,6 +15,7 @@ using Contrib.Podcasts.Services;
 using Orchard.Settings;
 using Orchard.Caching;
 using Orchard;
+
 namespace Contrib.Podcasts.Feeds {
   [UsedImplicitly]
   public class PodcastOnFeedQuery : IFeedQueryProvider, IFeedQuery {
