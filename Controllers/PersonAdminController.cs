@@ -39,7 +39,10 @@ namespace Contrib.Podcasts.Controllers {
       Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
       var personCount = _personRepository.Table.Count();
-      var people = _personRepository.Table.Skip((pager.Page - 1) * pager.PageSize);
+      var people = _personRepository.Table
+        .OrderBy(p => p.Name)
+        .Skip((pager.Page - 1) * pager.PageSize)
+        .Take(pager.PageSize);
       var pagerShape = Shape.Pager(pager).TotalItemCount(personCount);
 
       var viewModel = new PeopleViewModel {
