@@ -1,4 +1,6 @@
-﻿using Contrib.Podcasts.Models;
+﻿using System.Security.Cryptography;
+using System.Web;
+using Contrib.Podcasts.Models;
 using Contrib.Podcasts.Services;
 using JetBrains.Annotations;
 using Orchard;
@@ -46,65 +48,51 @@ namespace Contrib.Podcasts.Feeds {
       }
       PodcastPart podcastPart = _podcastService.Get(containerId).As<PodcastPart>();
       var podcastEpisodes = _podcastEpisodeService.Get(podcastPart);
-      XNamespace itunes = "http://www.itunes.com/dtds/podcast-1.0.dtd";
-      XNamespace dc = "http://purl.org/dc/elements/1.1/";
+
+      XNamespace itunesNS = "http://www.itunes.com/dtds/podcast-1.0.dtd";
+      XNamespace dcNS = "http://purl.org/dc/elements/1.1/";
+
+      // update the items
       foreach (var feedItem in context.Response.Items.OfType<FeedItem<ContentItem>>()) {
-        var inspector = new ItemInspector(
-        feedItem.Item,
-        _contentManager.GetItemMetadata(feedItem.Item),
-        _htmlFilters);
-        if (context.Format == "rss") {
-
-          var podcastEpisodesDetail = _podcastEpisodeService.Get(feedItem.Item.Id);
-          var PodcastEpisodeNumber = string.Format("{0:000}", podcastEpisodesDetail.EpisodeNumber);
-          dynamic episodeType = _contentManager.Query().ForType("PodcastEpisode").List().First(x => x.Record.Id == podcastEpisodesDetail.Id);
-          var episodePart = episodeType.PodcastEpisodePart;
-
-          var link = new XElement("link");
-          var guid = new XElement("guid", new XAttribute("isPermaLink", "false"));
-          var EpisodeNumber = new XElement("EpisodeNumber");
-          var category = new XElement("category");
-          context.Response.Contextualize(requestContext => {
-            var urlHelper = new UrlHelper(requestContext, _routes);
-            var uriBuilder = new UriBuilder(urlHelper.RequestContext.HttpContext.Request.ToRootUrlString()) { Path = urlHelper.RouteUrl(inspector.Link) };
-            link.Add(uriBuilder.Uri.OriginalString);
-            guid.Add(uriBuilder.Uri.OriginalString);
-          });
-
-          feedItem.Element.SetElementValue("title", "Episode " + PodcastEpisodeNumber + " | " + podcastEpisodesDetail.Title);
-          feedItem.Element.Add(link);
-          if (inspector.PublishedUtc != null) {
-            feedItem.Element.SetElementValue("pubDate", inspector.PublishedUtc.Value.ToString("r"));
-          }
-          feedItem.Element.Add(guid);
-
-          if (podcastEpisodesDetail.EnclosureUrl != null) {
-            var EnclouserUrl = new XElement("enclosure", new XAttribute("url", podcastEpisodesDetail.EnclosureUrl), new XAttribute("length", podcastEpisodesDetail.EnclosureFilesize), new XAttribute("type", "audio/mpeg"));
-            feedItem.Element.Add(EnclouserUrl);
-          }
-          if (episodePart.ShowNotes.Value != null) {
-            var shownotes = episodePart.ShowNotes.Value;
-            feedItem.Element.SetElementValue("description", shownotes);
-            var ItuneSubtitle = new XElement(itunes + "subtitle", new XAttribute(XNamespace.Xmlns + "itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd"), shownotes);
-            feedItem.Element.Add(ItuneSubtitle);
-            var ItuneSummary = new XElement(itunes + "summary", new XAttribute(XNamespace.Xmlns + "itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd"), shownotes);
-            feedItem.Element.Add(ItuneSummary);
-          }
-          var Ituneduration = new XElement(itunes + "duration", new XAttribute(XNamespace.Xmlns + "itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd"), podcastEpisodesDetail.Duration);
-          var ItuneKeywords = new XElement(itunes + "keywords", new XAttribute(XNamespace.Xmlns + "itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd"), "Episodes");
-          var Ituneauthor = new XElement(itunes + "author", new XAttribute(XNamespace.Xmlns + "itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd"), "Andrew Connell and Chris Johnson");
-          var itunesexplicit = new XElement(itunes + "explicit", new XAttribute(XNamespace.Xmlns + "itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd"), "no");
-          var itunesblock = new XElement(itunes + "block", new XAttribute(XNamespace.Xmlns + "itunes", "http://www.itunes.com/dtds/podcast-1.0.dtd"), "no");
-          feedItem.Element.Add(Ituneduration);
-          feedItem.Element.Add(ItuneKeywords);
-          feedItem.Element.Add(Ituneauthor);
-          feedItem.Element.Add(itunesexplicit);
-          feedItem.Element.Add(itunesblock);
-          var dccreator = new XElement(dc + "creator", new XAttribute(XNamespace.Xmlns + "dc", "http://purl.org/dc/elements/1.1/"), "no");
-          feedItem.Element.Add(dccreator);
-          feedItem.Element.SetElementValue("EpisodeNumber", PodcastEpisodeNumber);
+        var inspector = new ItemInspector(feedItem.Item, _contentManager.GetItemMetadata(feedItem.Item), _htmlFilters);
+        if (context.Format != "rss") {
+          return;
         }
 
+        var podcastEpisodesDetail = _podcastEpisodeService.Get(feedItem.Item.Id);
+        var PodcastEpisodeNumber = string.Format("{0:000}", podcastEpisodesDetail.EpisodeNumber);
+        dynamic episodeType = _contentManager.Query().ForType("PodcastEpisode").List().First(x => x.Record.Id == podcastEpisodesDetail.Id);
+        var episodePart = episodeType.PodcastEpisodePart;
+
+        feedItem.Element.SetElementValue("title", "Episode " + PodcastEpisodeNumber + " | " + podcastEpisodesDetail.Title);
+        if (inspector.PublishedUtc != null) {
+          feedItem.Element.SetElementValue("pubDate", inspector.PublishedUtc.Value.ToString("r"));
+        }
+
+        if (podcastEpisodesDetail.EnclosureUrl != null) {
+          feedItem.Element.Add(new XElement("enclosure",
+            new XAttribute("url", podcastEpisodesDetail.EnclosureUrl),
+            new XAttribute("length", podcastEpisodesDetail.EnclosureFilesize),
+            new XAttribute("type", "audio/mpeg")));
+        }
+        if (episodePart.ShowNotes.Value != null) {
+          var shownotes = HttpUtility.HtmlEncode(episodePart.ShowNotes.Value);
+          feedItem.Element.SetElementValue("description", shownotes);
+          feedItem.Element.Add(new XElement(itunesNS + "subtitle", shownotes));
+          feedItem.Element.Add(new XElement(itunesNS + "summary", shownotes));
+        }
+        var hosts = from host in podcastEpisodesDetail.Hosts
+                    orderby host.Name
+                    select host.Name;
+        var guests = from guest in podcastEpisodesDetail.Guests
+                     orderby guest.Name
+                     select guest.Name;
+        feedItem.Element.Add(new XElement(itunesNS + "duration", podcastEpisodesDetail.Duration));
+        feedItem.Element.Add(new XElement(itunesNS + "keywords", "Episodes"));
+        feedItem.Element.Add(new XElement(itunesNS + "author", string.Join(",", (hosts.Concat(guests)).ToArray())));
+        feedItem.Element.Add(new XElement(itunesNS + "explicit", podcastPart.Rating == SimpleRatingTypes.NonAdult ? "no" : "yes"));
+        feedItem.Element.Add(new XElement(itunesNS + "block", "no"));
+        feedItem.Element.Add(new XElement(dcNS + "creator", string.Join(",", hosts.ToArray())));
       }
 
 
