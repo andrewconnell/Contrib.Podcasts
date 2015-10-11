@@ -11,6 +11,15 @@ namespace Contrib.Podcasts.ViewModels {
     public CreativeCommonsLicenseTypes License { get; set; }
     public SimpleRatingTypes Rating { get; set; }
     public bool IncludeEpisodeTranscriptInFeed { get; set; }
+    public string ContactEmail { get; set; }
+    public string Keywords { get; set; }
+    public string Subtitle { get; set; }
+    public string Summary { get; set; }
+    public string CultureCode { get; set; }
+    public string LogoImageUrl { get; set; }
+    public string UpdateFrequency { get; set; }
+    public int UpdatePeriod { get; set; }
+    public string PodcastCategories { get; set; }
   }
 
 }
