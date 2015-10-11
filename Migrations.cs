@@ -39,6 +39,12 @@ namespace Contrib.Podcasts {
       return 1;
     }
 
+    public int UpdateFrom1() {
+      UpdateTableTo2();
+
+      return 2;
+    }
+
     private void CreateRecentEpisodesWidget() {
       SchemaBuilder.CreateTable("RecentPodcastEpisodesPartRecord", table => table
         .ContentPartRecord()
@@ -163,7 +169,39 @@ namespace Contrib.Podcasts {
       );
     }
 
-
+    /// <summary>
+    /// Updates the DB table to v1.1
+    /// </summary>
+    private void UpdateTableTo2() {
+      // add columns for RSS feed
+      SchemaBuilder.AlterTable("PodcastPartRecord", t => t
+        .AddColumn<string>("ContactEmail")
+        );
+      SchemaBuilder.AlterTable("PodcastPartRecord", t => t
+        .AddColumn<string>("Keywords")
+        );
+      SchemaBuilder.AlterTable("PodcastPartRecord", t => t
+        .AddColumn<string>("Subtitle")
+        );
+      SchemaBuilder.AlterTable("PodcastPartRecord", t => t
+        .AddColumn<string>("Summary")
+        );
+      SchemaBuilder.AlterTable("PodcastPartRecord", t => t
+        .AddColumn<string>("CultureCode")
+        );
+      SchemaBuilder.AlterTable("PodcastPartRecord", t => t
+        .AddColumn<string>("LogoImageUrl")
+        );
+      SchemaBuilder.AlterTable("PodcastPartRecord", t => t
+        .AddColumn<string>("UpdateFrequency")
+        );
+      SchemaBuilder.AlterTable("PodcastPartRecord", t => t
+        .AddColumn<int>("UpdatePeriod")
+        );
+      SchemaBuilder.AlterTable("PodcastPartRecord", t => t
+        .AddColumn<string>("Categories")
+        );
+    }
 
 #if DEBUG
     private void SampleDataCreatePeople() {

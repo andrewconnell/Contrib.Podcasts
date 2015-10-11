@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 
@@ -35,6 +36,51 @@ namespace Contrib.Podcasts.Models {
     public bool IncludeTranscriptInFeed {
       get { return Record.IncludeTranscriptInFeed; }
       set { Record.IncludeTranscriptInFeed = value; }
+    }
+
+    public string ContactEmail {
+      get { return Record.ContactEmail; }
+      set { Record.ContactEmail = value; }
+    }
+
+    public string Keywords {
+      get { return Record.Keywords; }
+      set { Record.Keywords = value; }
+    }
+
+    public string Subtitle {
+      get { return Record.Subtitle; }
+      set { Record.Subtitle = value; }
+    }
+
+    public string Summary {
+      get { return Record.Summary; }
+      set { Record.Summary = value; }
+    }
+
+    public string CultureCode {
+      get { return Record.CultureCode; }
+      set { Record.CultureCode = value; }
+    }
+
+    public string LogoImageUrl {
+      get { return Record.LogoImageUrl; }
+      set { Record.LogoImageUrl = value; }
+    }
+
+    public string UpdateFrequency {
+      get { return Record.UpdateFrequency; }
+      set { Record.UpdateFrequency = value; }
+    }
+
+    public int UpdatePeriod {
+      get { return Record.UpdatePeriod; }
+      set { Record.UpdatePeriod = value; }
+    }
+
+    public string PodcastCategories {
+      get { return Record.Categories; }
+      set { Record.Categories = value; }
     }
   }
 

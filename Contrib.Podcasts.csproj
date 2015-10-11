@@ -48,6 +48,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\newtonsoft.json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -103,6 +107,7 @@
     <Compile Include="Feeds\PodcastEpisodeFeedItemBuilder.cs" />
     <Compile Include="Handlers\PodcastEpisodeHandler.cs" />
     <Compile Include="Handlers\RecentPodcastEpisodesHandler.cs" />
+    <Compile Include="Models\PodcastCategories.cs" />
     <Compile Include="Models\RecentPodcastEpisodesPart.cs" />
     <Compile Include="Models\RecentPodcastEpisodesPartRecord.cs" />
     <Compile Include="Permissions.cs" />

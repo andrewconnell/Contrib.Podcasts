@@ -67,7 +67,16 @@ namespace Contrib.Podcasts.Drivers {
         Hosts = part.Hosts.Select(host => host.Id).ToList(),
         IncludeEpisodeTranscriptInFeed = part.IncludeTranscriptInFeed,
         License = part.CreativeCommonsLicense,
-        Rating = part.Rating
+        Rating = part.Rating,
+        ContactEmail = part.ContactEmail,
+        Keywords = part.Keywords,
+        Subtitle = part.Subtitle,
+        Summary = part.Summary,
+        CultureCode = part.CultureCode,
+        LogoImageUrl = part.LogoImageUrl,
+        UpdateFrequency = part.UpdateFrequency,
+        UpdatePeriod = part.UpdatePeriod,
+        PodcastCategories = part.PodcastCategories
       };
     }
   }

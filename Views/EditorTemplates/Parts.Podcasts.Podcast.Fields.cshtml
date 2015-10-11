@@ -22,8 +22,50 @@
 
 <fieldset>
   <legend>@T("Podcast Settings")</legend>
+  @Html.LabelFor(m => m.ContactEmail, T("Contact Email"))
+  @Html.TextBoxFor(m => m.ContactEmail)
+</fieldset>
+
+<fieldset>
+  @Html.LabelFor(m => m.Subtitle)
+  @Html.TextAreaFor(m => m.Subtitle, 5, 60, null)
+  <span class="hint">Used in the RSS feed, primarily used by iTunes.</span>
+</fieldset>
+
+<fieldset>
+  @Html.LabelFor(m => m.Summary)
+  @Html.TextAreaFor(m => m.Summary, 5, 60, null)
+  <span class="hint">Used in the RSS feed, primarily used by iTunes.</span>
+</fieldset>
+
+<fieldset>
+  @Html.LabelFor(m => m.CultureCode, T("Culture Code"))
+  @Html.TextBoxFor(m => m.CultureCode)
+  <span class="hint">Indicates the target culture of the podcast (ie: en-US). Used in the RSS feed, primarily used by iTunes.</span>
+</fieldset>
+
+<fieldset>
+  @Html.LabelFor(m => m.Keywords)
+  @Html.TextBoxFor(m => m.Keywords)
+  <span class="hint">Used in the RSS feed, primarily used by iTunes.</span>
+</fieldset>
+
+<fieldset>
+  @Html.LabelFor(m => m.PodcastCategories, T("Categories"))
+  @Html.TextAreaFor(m => m.PodcastCategories, 5, 60, null)
+  <span class="hint">Used in the RSS feed. Enter a JSON representation of the categories including the nesting. For instance:</span><br />
+  <span class="hint">{"categories":[{"title": "Technology"}, {"title": "Technology", "subcategory": "Tech News"}] }</span>
+</fieldset>
+
+<fieldset>
+  @Html.LabelFor(m => m.LogoImageUrl, T("Logo Image URL"))
+  @Html.TextBoxFor(m => m.LogoImageUrl)
+  <span class="hint">Used in the RSS feed.</span>
+</fieldset>
+
+<fieldset>
   @Html.EditorFor(m => m.IncludeEpisodeTranscriptInFeed)
-  <label for="@Html.FieldIdFor(m => m.IncludeEpisodeTranscriptInFeed)" class="forcheckbox">@T("Include Transcrpt of Episode in Podcast RSS feed")</label>
+  <label for="@Html.FieldIdFor(m => m.IncludeEpisodeTranscriptInFeed)" class="forcheckbox">@T("Include Transcript of Episode in Podcast RSS feed")</label>
 </fieldset>
 
 <fieldset>
@@ -35,6 +77,19 @@
   @Html.LabelFor(m => m.License, T("Creative Commons License"))
   @Html.DropDownListFor(m => m.License, licenseSelectListItems)
   <span class="hint">Refer to the <a href="http://creativecommons.org/licenses/" target="_blank">Creative Commons License</a> page for details on each specific license.</span>
+</fieldset>
+
+<fieldset>
+  <legend>Feed Update Suggestion</legend>
+  @Html.LabelFor(m => m.UpdateFrequency, T("Update Frequency"))
+  @Html.TextBoxFor(m => m.UpdateFrequency)
+  <span class="hint">Suggestion for clients how often the feed should be checked (ie: hourly).</span>
+</fieldset>
+
+<fieldset>
+  @Html.LabelFor(m => m.UpdatePeriod, T("Update Period"))
+  @Html.TextBoxFor(m => m.UpdatePeriod)
+  <span class="hint">How often it should be checked using the specified update frequency (ie: 1).</span>
 </fieldset>
 
 <fieldset>

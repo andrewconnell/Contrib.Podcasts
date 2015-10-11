@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI.WebControls;
 using Contrib.Podcasts.Models;
 using Contrib.Podcasts.ViewModels;
 using Orchard.ContentManagement;
@@ -52,6 +53,15 @@ namespace Contrib.Podcasts.Services {
       part.CreativeCommonsLicense = viewModel.License;
       part.IncludeTranscriptInFeed = viewModel.IncludeEpisodeTranscriptInFeed;
       part.Description = viewModel.Description;
+      part.ContactEmail = viewModel.ContactEmail;
+      part.Keywords = viewModel.Keywords;
+      part.Subtitle = viewModel.Subtitle;
+      part.Summary = viewModel.Summary;
+      part.CultureCode = viewModel.CultureCode;
+      part.LogoImageUrl = viewModel.LogoImageUrl;
+      part.UpdateFrequency = viewModel.UpdateFrequency;
+      part.UpdatePeriod = viewModel.UpdatePeriod;
+      part.PodcastCategories = viewModel.PodcastCategories;
 
       // get list of all hosts currently in the DB for this podcast
       var oldHosts = _podcastHostRespository.Fetch(host => host.PodcastPartRecord.Id == part.Id).Select(r => r.PersonRecord.Id).ToList();
