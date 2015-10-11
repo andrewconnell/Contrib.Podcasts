@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: Andrew Connell
 Website: http://www.andrewconnell.com
-Version: 1.0
-OrchardVersion: 1.6
+Version: 1.1
+OrchardVersion: 1.9
 Description: Enables capability to implement a podcast with a valid Yahoo Media RSS feed for publication of the podcast to iTunes and Zune Marketplace.
 FeatureDescription: A simple podcast.
 Dependencies: Common, Navigation, Orchard.Widgets, Orchard.jQuery, Orchard.PublishLater
