@@ -56,7 +56,7 @@ namespace Contrib.Podcasts {
         .WithPart("RecentPodcastEpisodesPart")
         .WithPart("CommonPart")
         .WithPart("WidgetPart")
-        .WithSetting("Stereotype","Widget")
+        .WithSetting("Stereotype", "Widget")
         );
     }
 
@@ -175,25 +175,25 @@ namespace Contrib.Podcasts {
     private void UpdateTableTo2() {
       // add columns for RSS feed
       SchemaBuilder.AlterTable("PodcastPartRecord", t => t
-        .AddColumn<string>("ContactEmail")
+        .AddColumn<string>("ContactEmail", c => c.WithLength(100))
         );
       SchemaBuilder.AlterTable("PodcastPartRecord", t => t
-        .AddColumn<string>("Keywords")
+        .AddColumn<string>("Keywords", c => c.WithLength(250))
         );
       SchemaBuilder.AlterTable("PodcastPartRecord", t => t
         .AddColumn<string>("Subtitle")
         );
       SchemaBuilder.AlterTable("PodcastPartRecord", t => t
-        .AddColumn<string>("Summary")
+        .AddColumn<string>("Summary", c => c.Unlimited())
         );
       SchemaBuilder.AlterTable("PodcastPartRecord", t => t
-        .AddColumn<string>("CultureCode")
+        .AddColumn<string>("CultureCode", c => c.WithLength(5))
         );
       SchemaBuilder.AlterTable("PodcastPartRecord", t => t
-        .AddColumn<string>("LogoImageUrl")
+        .AddColumn<string>("LogoImageUrl", c => c.WithLength(300))
         );
       SchemaBuilder.AlterTable("PodcastPartRecord", t => t
-        .AddColumn<string>("UpdateFrequency")
+        .AddColumn<string>("UpdateFrequency", c => c.WithLength(10))
         );
       SchemaBuilder.AlterTable("PodcastPartRecord", t => t
         .AddColumn<int>("UpdatePeriod")
