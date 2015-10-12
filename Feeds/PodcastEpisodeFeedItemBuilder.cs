@@ -47,7 +47,6 @@ namespace Contrib.Podcasts.Feeds {
         return;
       }
       PodcastPart podcastPart = _podcastService.Get(containerId).As<PodcastPart>();
-      var podcastEpisodes = _podcastEpisodeService.Get(podcastPart);
 
       XNamespace itunesNS = "http://www.itunes.com/dtds/podcast-1.0.dtd";
       XNamespace dcNS = "http://purl.org/dc/elements/1.1/";
@@ -60,11 +59,9 @@ namespace Contrib.Podcasts.Feeds {
         }
 
         var podcastEpisodesDetail = _podcastEpisodeService.Get(feedItem.Item.Id);
-        var PodcastEpisodeNumber = string.Format("{0:000}", podcastEpisodesDetail.EpisodeNumber);
         dynamic episodeType = _contentManager.Query().ForType("PodcastEpisode").List().First(x => x.Record.Id == podcastEpisodesDetail.Id);
         var episodePart = episodeType.PodcastEpisodePart;
 
-        feedItem.Element.SetElementValue("title", "Episode " + PodcastEpisodeNumber + " | " + podcastEpisodesDetail.Title);
         if (inspector.PublishedUtc != null) {
           feedItem.Element.SetElementValue("pubDate", inspector.PublishedUtc.Value.ToString("r"));
         }
@@ -95,13 +92,7 @@ namespace Contrib.Podcasts.Feeds {
         feedItem.Element.Add(new XElement(dcNS + "creator", string.Join(",", hosts.ToArray())));
       }
 
-
-
-
     }
 
   }
-  //}
 }
-
-

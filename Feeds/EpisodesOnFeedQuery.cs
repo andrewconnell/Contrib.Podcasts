@@ -55,7 +55,7 @@ namespace Contrib.Podcasts.Feeds {
         return;
 
       var limitValue = context.ValueProvider.GetValue("limit");
-      var limit = 20;
+      var limit = 500;
       if (limitValue != null)
         limit = (int)limitValue.ConvertTo(typeof(int));
 

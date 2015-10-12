@@ -1,6 +1,6 @@
 ﻿@using Contrib.Podcasts.Models
 @{
   PodcastEpisodePart episode = Model.Episode;
-  string episodeLink = string.Format("Episode {0:000} - {1}", episode.EpisodeNumber, episode.Title);
+  string episodeLink = episode.Title;
 }
 @Html.ItemDisplayLink(episodeLink, episode)

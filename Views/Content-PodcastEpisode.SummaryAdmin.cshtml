@@ -10,7 +10,7 @@
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
   <div class="properties">
     <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
-    <h3>@Html.ItemAdminLink(T("Episode {0:000}: {1}", contentItem.As<PodcastEpisodePart>().EpisodeNumber, contentItem.As<PodcastEpisodePart>().Title).Text, contentItem)</h3>
+    <h3>@Html.ItemAdminLink(T("{0}", contentItem.As<PodcastEpisodePart>().Title).Text, contentItem)</h3>
     -
     <div class="contentType">@contentItem.TypeDefinition.DisplayName</div>
     @if (Model.Header != null) {
