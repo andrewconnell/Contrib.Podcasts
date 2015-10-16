@@ -46,8 +46,13 @@ namespace Contrib.Podcasts.Feeds {
       if (container == null) {
         return null;
       }
+      // if the container is not a podcast, don't return this provider
+      if (container.ContentType != "Podcast") {
+        return null; 
+      }
 
-      return new FeedQueryMatch { FeedQuery = this, Priority = -5 };
+      // otherwise, return this provider with a high priority
+      return new FeedQueryMatch { FeedQuery = this, Priority = 0 };
     }
     public void Execute(FeedContext context) {
       var containerIdValue = context.ValueProvider.GetValue("containerid");
@@ -55,7 +60,7 @@ namespace Contrib.Podcasts.Feeds {
         return;
 
       var limitValue = context.ValueProvider.GetValue("limit");
-      var limit = 500;
+      var limit = 50;
       if (limitValue != null)
         limit = (int)limitValue.ConvertTo(typeof(int));
 
