@@ -119,7 +119,7 @@ namespace Contrib.Podcasts.Drivers {
         PodcastId = part.PodcastPart.Id,
         EpisodeNumber = part.EpisodeNumber,
         EnclosureUrl = part.EnclosureUrl,
-        EnclosureFileSize = part.EnclosureFilesize,
+        EnclosureFileSize = Convert.ToInt32(part.EnclosureFilesize),
         Duration = part.Duration,
         Rating = part.Rating,
         AvailablePeople = _personRepository.Table.OrderBy(p => p.Name).ToList(),

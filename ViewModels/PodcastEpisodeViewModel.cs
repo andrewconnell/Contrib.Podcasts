@@ -9,7 +9,7 @@ namespace Contrib.Podcasts.ViewModels {
 
     public string EnclosureUrl { get; set; }
     public string Duration { get; set; }
-    public decimal EnclosureFileSize { get; set; }
+    public int EnclosureFileSize { get; set; }
     public SimpleRatingTypes Rating { get; set; }
 
     public IEnumerable<PersonRecord> AvailablePeople { get; set; }

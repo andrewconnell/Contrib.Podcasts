@@ -76,7 +76,7 @@ namespace Contrib.Podcasts.Feeds {
         if (podcastEpisodesDetail.EnclosureUrl != null) {
           feedItem.Element.Add(new XElement("enclosure",
             new XAttribute("url", podcastEpisodesDetail.EnclosureUrl),
-            new XAttribute("length", podcastEpisodesDetail.EnclosureFilesize),
+            new XAttribute("length", Convert.ToInt32(podcastEpisodesDetail.EnclosureFilesize)),
             new XAttribute("type", "audio/mpeg")));
         }
         if (episodePart.ShowNotes.Value != null) {
