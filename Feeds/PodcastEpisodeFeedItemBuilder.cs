@@ -43,11 +43,15 @@ namespace Contrib.Podcasts.Feeds {
       var containerIdValue = context.ValueProvider.GetValue("containerid");
       var containerId = (int)containerIdValue.ConvertTo(typeof(int));
       var container = _contentManager.Get(containerId);
+
       if (container == null) {
         return;
       }
-      PodcastPart podcastPart = _podcastService.Get(containerId).As<PodcastPart>();
+      if (container.ContentType != "Podcast") {
+        return;
+      }
 
+      PodcastPart podcastPart = _podcastService.Get(containerId).As<PodcastPart>();
       XNamespace itunesNS = "http://www.itunes.com/dtds/podcast-1.0.dtd";
       XNamespace dcNS = "http://purl.org/dc/elements/1.1/";
 
@@ -61,6 +65,9 @@ namespace Contrib.Podcasts.Feeds {
         var podcastEpisodesDetail = _podcastEpisodeService.Get(feedItem.Item.Id);
         dynamic episodeType = _contentManager.Query().ForType("PodcastEpisode").List().First(x => x.Record.Id == podcastEpisodesDetail.Id);
         var episodePart = episodeType.PodcastEpisodePart;
+
+        // set title
+        feedItem.Element.SetElementValue("title", string.Format("{0:000} | {1}", podcastEpisodesDetail.EpisodeNumber, podcastEpisodesDetail.Title));
 
         if (inspector.PublishedUtc != null) {
           feedItem.Element.SetElementValue("pubDate", inspector.PublishedUtc.Value.ToString("r"));

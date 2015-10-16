@@ -170,13 +170,15 @@ namespace Contrib.Podcasts.Services {
       }
 
       // add all new guests not in the DB that are in the new list
-      foreach (var newGuestId in viewModel.Guests.Except(oldGuests)) {
-        var guest = _personRepository.Get(newGuestId);
-        _episodePersonRepository.Create(new EpisodePersonRecord {
-          PersonRecord = guest,
-          PodcastEpisodePartRecord = part.Record,
-          IsHost = false
-        });
+      if (viewModel.Guests != null) {
+        foreach (var newGuestId in viewModel.Guests.Except(oldGuests)) {
+          var guest = _personRepository.Get(newGuestId);
+          _episodePersonRepository.Create(new EpisodePersonRecord {
+            PersonRecord = guest,
+            PodcastEpisodePartRecord = part.Record,
+            IsHost = false
+          });
+        }
       }
       #endregion
     }

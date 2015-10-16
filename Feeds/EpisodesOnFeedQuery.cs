@@ -65,6 +65,9 @@ namespace Contrib.Podcasts.Feeds {
       if (container == null) {
         return;
       }
+      if (container.ContentType != "Podcast") {
+        return;
+      }
 
       PodcastPart podcastPart = _podcastService.Get(containerId).As<PodcastPart>();
       var inspector = new ItemInspector(container, _contentManager.GetItemMetadata(container), _htmlFilters);
