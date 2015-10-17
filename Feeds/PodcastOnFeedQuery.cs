@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Web;
 using System.Web.UI.WebControls;
 using System.Xml.Linq;
 using JetBrains.Annotations;
@@ -48,7 +49,7 @@ namespace Contrib.Podcasts.Feeds {
       }
       // if the container is not a podcast, don't return this provider
       if (container.ContentType != "Podcast") {
-        return null; 
+        return null;
       }
 
       // otherwise, return this provider with a high priority
@@ -80,20 +81,34 @@ namespace Contrib.Podcasts.Feeds {
         // add namespace
         XNamespace dcNS = "http://purl.org/dc/elements/1.1/";
         context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "dc", dcNS.NamespaceName));
+        XNamespace ccNS = "http://backend.userland.com/creativeCommonsRssModule";
+        context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "creativeCommons", ccNS.NamespaceName));
 
-
-        var link = new XElement("link");
-
+        var podcastLink = new XElement("link");
+        var imageLink = new XElement("link");
+        
         context.Response.Element.SetElementValue("title", podcastPart.Title);
-        context.Response.Element.Add(link);
+        context.Response.Element.Add(podcastLink);
         context.Response.Element.SetElementValue("description", podcastPart.Description);
+        context.Response.Element.Add(new XElement("lastBuildDate", DateTime.UtcNow.ToString("r")));
+        context.Response.Element.Add(new XElement("copyright", "Copyright " + DateTime.UtcNow.ToString("yyyy") + " " + podcastPart.Title));
+        context.Response.Element.Add(new XElement("ttl", "1440"));
+
+        // add image
+        if (podcastPart.LogoImageUrl != null) {
+          var podcastImage = new XElement("image");
+          podcastImage.Add(new XElement("title", podcastPart.Title));
+          podcastImage.Add(imageLink);
+          podcastImage.Add(new XElement("url", podcastPart.LogoImageUrl));
+          context.Response.Element.Add(podcastImage);
+        }
+
         context.Response.Contextualize(requestContext => {
           var urlHelper = new UrlHelper(requestContext);
           var uriBuilder = new UriBuilder(urlHelper.RequestContext.HttpContext.Request.ToRootUrlString()) { Path = urlHelper.RouteUrl(inspector.Link) };
-          link.Add(uriBuilder.Uri.OriginalString);
+          podcastLink.Add(uriBuilder.Uri.OriginalString);
+          imageLink.Add(uriBuilder.Uri.OriginalString);
         });
-        context.Response.Element.Add(new XElement("lastBuildDate", DateTime.UtcNow.ToString("r")));
-        context.Response.Element.Add(new XElement("copyright", "Copyright " + DateTime.UtcNow.ToString("yyyy") + " " + podcastPart.Title));
 
         // add hosts
         var hosts = from host in podcastPart.Hosts
@@ -163,8 +178,7 @@ namespace Contrib.Podcasts.Feeds {
             // add it
             context.Response.Element.Add(podcastCategory);
           }
-        }
-        catch {}
+        } catch { }
 
         // media
         XNamespace mediaNS = "http://search.yahoo.com/mrss/";
@@ -179,7 +193,7 @@ namespace Contrib.Podcasts.Feeds {
           new XElement(mediaNS + "rating",
           podcastPart.Rating.ToString().ToLower()));
         context.Response.Element.Add(
-          new XElement(itunesNS + "credit",
+          new XElement(mediaNS + "credit",
           new XAttribute("role", "owner"),
           string.Join(",", hosts.ToArray())));
         context.Response.Element.Add(
@@ -200,8 +214,36 @@ namespace Contrib.Podcasts.Feeds {
               new XAttribute("scheme", itunesNS.NamespaceName),
               categoryValue));
           }
+        } catch { }
+
+        // creative commons
+        if (podcastPart.CreativeCommonsLicense != null) {
+          var license = "";
+          switch (podcastPart.CreativeCommonsLicense) {
+            case CreativeCommonsLicenseTypes.Attribution:
+              license = "http://creativecommons.org/licenses/by/4.0";
+              break;
+            case CreativeCommonsLicenseTypes.AttributionShareAlike:
+              license = "http://creativecommons.org/licenses/by-sa/4.0";
+              break;
+            case CreativeCommonsLicenseTypes.AttributionNoDerivs:
+              license = "http://creativecommons.org/licenses/by-nd/4.0";
+              break;
+            case CreativeCommonsLicenseTypes.AttributionNonCommercial:
+              license = "http://creativecommons.org/licenses/by-nc/4.0";
+              break;
+            case CreativeCommonsLicenseTypes.AttributionNonCommercialShareAlike:
+              license = "http://creativecommons.org/licenses/by-nc-sa/4.0";
+              break;
+            case CreativeCommonsLicenseTypes.AttributionNonCommercialNoDerivs:
+              license = "http://creativecommons.org/licenses/by-nc-nd/4.0";
+              break;
+          }
+          // add the license
+          if (license != "") {
+            context.Response.Element.Add(new XElement(ccNS + "license", license));
+          }
         }
-        catch {}
       } else {
         context.Builder.AddProperty(context, null, "title", podcastPart.Title);
         context.Builder.AddProperty(context, null, "description", inspector.Description);
