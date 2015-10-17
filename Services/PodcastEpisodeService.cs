@@ -117,6 +117,7 @@ namespace Contrib.Podcasts.Services {
     /// </summary>
     public void Update(PodcastEpisodeViewModel viewModel, PodcastEpisodePart part) {
       part.PodcastId = part.PodcastPart.Id;
+      part.Description = viewModel.Description;
       part.EpisodeNumber = viewModel.EpisodeNumber;
       part.EnclosureUrl = viewModel.EnclosureUrl;
       part.EnclosureFilesize = viewModel.EnclosureFileSize;

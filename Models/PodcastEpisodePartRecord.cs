@@ -11,6 +11,10 @@ namespace Contrib.Podcasts.Models {
     public virtual int PodcastId { get; set; }
 
     /// <summary>
+    /// Description of the episode.
+    /// </summary>
+    public virtual string Description { get; set; }
+    /// <summary>
     /// Episode number.
     /// </summary>
     public virtual int EpisodeNumber { get; set; }

@@ -3,9 +3,12 @@
   PodcastEpisodePart episode = Model.Episode;
   var fileSize = episode.EnclosureFilesize/1000000;
 }
-  <div class="metadata">
+<div class="metadata">
   <a href="@episode.EnclosureUrl"><img src="@Href("~/Modules/Contrib.Podcasts/Content/audio_mp3_button.png")" border="0" /></a>
   <br /><strong>Size: </strong>@fileSize.ToString("0.0") MB
   <br /><strong>Length: </strong>@episode.Duration minutes
   <br /><strong>Recorded: </strong>@Model.RecordedDate.ToString("MMMM dd, yyyy")
+</div>
+<div>
+  @episode.Description
 </div>

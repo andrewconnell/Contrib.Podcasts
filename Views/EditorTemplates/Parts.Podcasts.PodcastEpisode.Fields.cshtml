@@ -16,6 +16,11 @@
 }
 
 <fieldset>
+  @Html.LabelFor(m => m.Description, T("Description"))
+  @Html.TextAreaFor(m => m.Description, 5, 60, null)
+</fieldset>
+
+<fieldset>
   <legend>Episode Details</legend>
   @Html.LabelFor(m => m.EpisodeNumber, T("Episode Number"))
   @Html.TextBoxFor(m => m.EpisodeNumber)

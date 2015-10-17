@@ -116,6 +116,7 @@ namespace Contrib.Podcasts.Drivers {
 
     private PodcastEpisodeViewModel BuildViewModel(PodcastEpisodePart part) {
       return new PodcastEpisodeViewModel {
+        Description = part.Description,
         PodcastId = part.PodcastPart.Id,
         EpisodeNumber = part.EpisodeNumber,
         EnclosureUrl = part.EnclosureUrl,

@@ -45,6 +45,12 @@ namespace Contrib.Podcasts {
       return 2;
     }
 
+    public int UpdateFrom2() {
+      UpdateTableTo3();
+
+      return 3;
+    }
+
     private void CreateRecentEpisodesWidget() {
       SchemaBuilder.CreateTable("RecentPodcastEpisodesPartRecord", table => table
         .ContentPartRecord()
@@ -200,6 +206,16 @@ namespace Contrib.Podcasts {
         );
       SchemaBuilder.AlterTable("PodcastPartRecord", t => t
         .AddColumn<string>("Categories")
+        );
+    }
+
+    /// <summary>
+    /// Updates the DB table to v1.2
+    /// </summary>
+    private void UpdateTableTo3() {
+      // add columns for RSS feed
+      SchemaBuilder.AlterTable("PodcastEpisodePartRecord", t => t
+        .AddColumn<string>("Description", c => c.Unlimited())
         );
     }
 

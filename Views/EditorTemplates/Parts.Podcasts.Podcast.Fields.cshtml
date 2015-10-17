@@ -63,10 +63,12 @@
   <span class="hint">Used in the RSS feed.</span>
 </fieldset>
 
-<fieldset>
-  @Html.EditorFor(m => m.IncludeEpisodeTranscriptInFeed)
-  <label for="@Html.FieldIdFor(m => m.IncludeEpisodeTranscriptInFeed)" class="forcheckbox">@T("Include Transcript of Episode in Podcast RSS feed")</label>
-</fieldset>
+<!--
+  <fieldset>
+    @Html.EditorFor(m => m.IncludeEpisodeTranscriptInFeed)
+    <label for="@Html.FieldIdFor(m => m.IncludeEpisodeTranscriptInFeed)" class="forcheckbox">@T("Include Transcript of Episode in Podcast RSS feed")</label>
+  </fieldset>
+  -->
 
 <fieldset>
   @Html.LabelFor(m => m.Rating, T("Rating"))

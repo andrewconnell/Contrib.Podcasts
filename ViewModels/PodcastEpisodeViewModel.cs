@@ -5,6 +5,7 @@ using Contrib.Podcasts.Models;
 namespace Contrib.Podcasts.ViewModels {
   public class PodcastEpisodeViewModel {
     public int PodcastId { get; set; }
+    public string Description { get; set; }
     public int EpisodeNumber { get; set; }
 
     public string EnclosureUrl { get; set; }

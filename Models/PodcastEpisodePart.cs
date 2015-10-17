@@ -19,6 +19,12 @@ namespace Contrib.Podcasts.Models {
     }
 
     [Required]
+    public string Description {
+      get { return Record.Description; }
+      set { Record.Description = value; }
+    }
+
+    [Required]
     public int EpisodeNumber {
       get { return Record.EpisodeNumber; }
       set { Record.EpisodeNumber = value; }

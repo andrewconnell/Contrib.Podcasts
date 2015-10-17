@@ -79,11 +79,11 @@ namespace Contrib.Podcasts.Feeds {
             new XAttribute("length", Convert.ToInt32(podcastEpisodesDetail.EnclosureFilesize)),
             new XAttribute("type", "audio/mpeg")));
         }
-        if (episodePart.ShowNotes.Value != null) {
-          var shownotes = HttpUtility.HtmlEncode(episodePart.ShowNotes.Value);
-          feedItem.Element.SetElementValue("description", shownotes);
-          feedItem.Element.Add(new XElement(itunesNS + "subtitle", shownotes));
-          feedItem.Element.Add(new XElement(itunesNS + "summary", shownotes));
+        if (episodePart.Description != null) {
+          var description = HttpUtility.HtmlEncode(episodePart.Description);
+          feedItem.Element.SetElementValue("description", description);
+          feedItem.Element.Add(new XElement(itunesNS + "subtitle", description));
+          feedItem.Element.Add(new XElement(itunesNS + "summary", description));
         }
         var hosts = from host in podcastEpisodesDetail.Hosts
                     orderby host.Name
