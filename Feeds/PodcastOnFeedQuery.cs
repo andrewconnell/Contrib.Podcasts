@@ -86,7 +86,7 @@ namespace Contrib.Podcasts.Feeds {
 
         var podcastLink = new XElement("link");
         var imageLink = new XElement("link");
-        
+
         context.Response.Element.SetElementValue("title", podcastPart.Title);
         context.Response.Element.Add(podcastLink);
         context.Response.Element.SetElementValue("description", podcastPart.Description);
@@ -217,32 +217,30 @@ namespace Contrib.Podcasts.Feeds {
         } catch { }
 
         // creative commons
-        if (podcastPart.CreativeCommonsLicense != null) {
-          var license = "";
-          switch (podcastPart.CreativeCommonsLicense) {
-            case CreativeCommonsLicenseTypes.Attribution:
-              license = "http://creativecommons.org/licenses/by/4.0";
-              break;
-            case CreativeCommonsLicenseTypes.AttributionShareAlike:
-              license = "http://creativecommons.org/licenses/by-sa/4.0";
-              break;
-            case CreativeCommonsLicenseTypes.AttributionNoDerivs:
-              license = "http://creativecommons.org/licenses/by-nd/4.0";
-              break;
-            case CreativeCommonsLicenseTypes.AttributionNonCommercial:
-              license = "http://creativecommons.org/licenses/by-nc/4.0";
-              break;
-            case CreativeCommonsLicenseTypes.AttributionNonCommercialShareAlike:
-              license = "http://creativecommons.org/licenses/by-nc-sa/4.0";
-              break;
-            case CreativeCommonsLicenseTypes.AttributionNonCommercialNoDerivs:
-              license = "http://creativecommons.org/licenses/by-nc-nd/4.0";
-              break;
-          }
-          // add the license
-          if (license != "") {
-            context.Response.Element.Add(new XElement(ccNS + "license", license));
-          }
+        var license = "";
+        switch (podcastPart.CreativeCommonsLicense) {
+          case CreativeCommonsLicenseTypes.Attribution:
+            license = "http://creativecommons.org/licenses/by/4.0";
+            break;
+          case CreativeCommonsLicenseTypes.AttributionShareAlike:
+            license = "http://creativecommons.org/licenses/by-sa/4.0";
+            break;
+          case CreativeCommonsLicenseTypes.AttributionNoDerivs:
+            license = "http://creativecommons.org/licenses/by-nd/4.0";
+            break;
+          case CreativeCommonsLicenseTypes.AttributionNonCommercial:
+            license = "http://creativecommons.org/licenses/by-nc/4.0";
+            break;
+          case CreativeCommonsLicenseTypes.AttributionNonCommercialShareAlike:
+            license = "http://creativecommons.org/licenses/by-nc-sa/4.0";
+            break;
+          case CreativeCommonsLicenseTypes.AttributionNonCommercialNoDerivs:
+            license = "http://creativecommons.org/licenses/by-nc-nd/4.0";
+            break;
+        }
+        // add the license
+        if (license != "") {
+          context.Response.Element.Add(new XElement(ccNS + "license", license));
         }
       } else {
         context.Builder.AddProperty(context, null, "title", podcastPart.Title);
