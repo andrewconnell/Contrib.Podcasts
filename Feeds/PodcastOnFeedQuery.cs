@@ -33,10 +33,11 @@ namespace Contrib.Podcasts.Feeds {
       _contentManager = contentManager;
       _podcastService = podcastService;
       _podcastEpisodeService = podcastEpisodeService;
-
     }
 
     public FeedQueryMatch Match(FeedContext context) {
+      System.Diagnostics.Debug.WriteLine("Podcast.PodcastOnFeedQuery.Match.Start");
+
       var containerIdValue = context.ValueProvider.GetValue("containerid");
       if (containerIdValue == null)
         return null;
@@ -53,9 +54,12 @@ namespace Contrib.Podcasts.Feeds {
       }
 
       // otherwise, return this provider with a high priority
+      System.Diagnostics.Debug.WriteLine("Podcast.PodcastOnFeedQuery.Match.End");
       return new FeedQueryMatch { FeedQuery = this, Priority = 0 };
     }
     public void Execute(FeedContext context) {
+      System.Diagnostics.Debug.WriteLine("Podcast.PodcastOnFeedQuery.Execute.Start");
+
       var containerIdValue = context.ValueProvider.GetValue("containerid");
       if (containerIdValue == null)
         return;
@@ -111,11 +115,15 @@ namespace Contrib.Podcasts.Feeds {
         });
 
         // add hosts
+        System.Diagnostics.Debug.WriteLine("Podcast.PodcastOnFeedQuery.Execute.GetHosts.Start");
         var hosts = from host in podcastPart.Hosts
                     orderby host.Name
                     select host.Name;
-        context.Response.Element.Add(new XElement("managingEditor", string.Join(",", hosts.ToArray())));
-        context.Response.Element.Add(new XElement("webMaster", string.Join(",", hosts.ToArray())));
+        var hostList = string.Join(",", hosts.ToArray());
+        System.Diagnostics.Debug.WriteLine("Podcast.PodcastOnFeedQuery.Execute.GetHosts.End");
+
+        context.Response.Element.Add(new XElement("managingEditor", hostList));
+        context.Response.Element.Add(new XElement("webMaster", hostList));
         context.Response.Element.Add(new XElement("language", podcastPart.CultureCode));
 
         // syndication
@@ -258,6 +266,8 @@ namespace Contrib.Podcasts.Feeds {
       foreach (var item in items) {
         context.Builder.AddItem(context, item);
       }
+
+      System.Diagnostics.Debug.WriteLine("Podcast.PodcastOnFeedQuery.Execute.End");
     }
 
   }

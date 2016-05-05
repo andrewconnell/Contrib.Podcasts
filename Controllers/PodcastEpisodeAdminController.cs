@@ -16,6 +16,7 @@ using Orchard.Settings;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Contrib.Podcasts.Extensions;
+using Orchard.Caching;
 
 namespace Contrib.Podcasts.Controllers {
   [ValidateInput(false), Admin]
@@ -26,8 +27,16 @@ namespace Contrib.Podcasts.Controllers {
     private readonly IPodcastEpisodeService _podcastEpisodeService;
     private readonly IRepository<PersonRecord> _personRepository;
     private readonly IRepository<EpisodePersonRecord> _episodePersonRepository;
+    private readonly ISignals _signals;
 
-    public PodcastEpisodeAdminController(IOrchardServices services, IContentManager contentManager, ISiteService siteService, IPodcastService podcastService, IPodcastEpisodeService podcastEpisodeService, IRepository<PersonRecord> personRepository, IRepository<EpisodePersonRecord> episodePersonRepository) {
+    public PodcastEpisodeAdminController(IOrchardServices services,
+                                          IContentManager contentManager,
+                                          ISiteService siteService,
+                                          IPodcastService podcastService,
+                                          IPodcastEpisodeService podcastEpisodeService,
+                                          IRepository<PersonRecord> personRepository,
+                                          IRepository<EpisodePersonRecord> episodePersonRepository,
+                                          ISignals signals) {
       Services = services;
       _contentManager = contentManager;
       _siteService = siteService;
@@ -35,6 +44,7 @@ namespace Contrib.Podcasts.Controllers {
       _podcastEpisodeService = podcastEpisodeService;
       _personRepository = personRepository;
       _episodePersonRepository = episodePersonRepository;
+      _signals = signals;
     }
 
     public IOrchardServices Services { get; set; }
@@ -114,6 +124,10 @@ namespace Contrib.Podcasts.Controllers {
         Services.ContentManager.Publish(episode.ContentItem);
       }
 
+      // invalidate cache for this item just in case...
+      _signals.Trigger(string.Format("Contrib.Podcasts[{0}].FeedItem[{1}]_Evict", podcast.Id, episode.Id));
+      _signals.Trigger("Contrib.Podcasts.Episodes_Evict");
+
       Services.Notifier.Information(T("Your {0} has been created.", episode.TypeDefinition.DisplayName));
       return Redirect(Url.PodcastEpisodeEdit(episode));
     }
@@ -135,7 +149,7 @@ namespace Contrib.Podcasts.Controllers {
         return new HttpUnauthorizedResult();
 
       dynamic model = Services.ContentManager.BuildEditor(episode);
-      return View((object) model);
+      return View((object)model);
     }
 
     /// <summary>
@@ -147,30 +161,34 @@ namespace Contrib.Podcasts.Controllers {
       return EditPOST(podcastId, episodeId, contentItem => {
         if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
           Services.ContentManager.Publish(contentItem);
+
+        // invalidate cache for this item...
+        _signals.Trigger(string.Format("Contrib.Podcasts[{0}].FeedItem[{1}]_Evict", podcastId, episodeId));
+        _signals.Trigger("Contrib.Podcasts.Episodes_Evict");
       });
-/*
-      var podcast = _podcastService.Get(podcastId);
-      if (podcast == null)
-        return HttpNotFound();
-      
-      var episode = _podcastEpisodeService.Get(episodeId, VersionOptions.Latest);
-      if (episode == null)
-        return HttpNotFound();
+      /*
+            var podcast = _podcastService.Get(podcastId);
+            if (podcast == null)
+              return HttpNotFound();
 
-      if (!Services.Authorizer.Authorize(Permissions.EditPodcastEpisode, episode, T("Couldn't edit podcast episode")))
-        return new HttpUnauthorizedResult();
+            var episode = _podcastEpisodeService.Get(episodeId, VersionOptions.Latest);
+            if (episode == null)
+              return HttpNotFound();
 
-      dynamic model = Services.ContentManager.UpdateEditor(episode, this);
-      if (!ModelState.IsValid) {
-        Services.TransactionManager.Cancel();
-        return View((object)model);
-      }
+            if (!Services.Authorizer.Authorize(Permissions.EditPodcastEpisode, episode, T("Couldn't edit podcast episode")))
+              return new HttpUnauthorizedResult();
 
-      _contentManager.Publish(episode.ContentItem);
-      Services.Notifier.Information(T("Episode information updated"));
+            dynamic model = Services.ContentManager.UpdateEditor(episode, this);
+            if (!ModelState.IsValid) {
+              Services.TransactionManager.Cancel();
+              return View((object)model);
+            }
 
-      return Redirect(Url.PodcastForAdmin(podcast.As<PodcastPart>()));
-*/
+            _contentManager.Publish(episode.ContentItem);
+            Services.Notifier.Information(T("Episode information updated"));
+
+            return Redirect(Url.PodcastForAdmin(podcast.As<PodcastPart>()));
+      */
     }
 
     public ActionResult EditPOST(int podcastId, int episodeId, Action<ContentItem> conditionallyPublish) {
@@ -192,8 +210,11 @@ namespace Contrib.Podcasts.Controllers {
       }
 
       conditionallyPublish(episode.ContentItem);
-
       Services.Notifier.Information(T("Episode information updated"));
+
+      // invalidate cache for this item...
+      _signals.Trigger(string.Format("Contrib.Podcasts[{0}].FeedItem[{1}]_Evict", podcastId, episodeId));
+      _signals.Trigger("Contrib.Podcasts.Episodes_Evict");
 
       return Redirect(Url.PodcastForAdmin(podcast.As<PodcastPart>()));
     }
@@ -224,6 +245,10 @@ namespace Contrib.Podcasts.Controllers {
       _contentManager.Publish(episode.ContentItem);
       Services.Notifier.Information(T("Episode information updated"));
 
+      // invalidate cache for this item...
+      _signals.Trigger(string.Format("Contrib.Podcasts[{0}].FeedItem[{1}]_Evict", podcastId, episodeId));
+      _signals.Trigger("Contrib.Podcasts.Episodes_Evict");
+
       return Redirect(Url.PodcastForAdmin(podcast.As<PodcastPart>()));
     }
 
@@ -247,6 +272,10 @@ namespace Contrib.Podcasts.Controllers {
       _podcastEpisodeService.Delete(episode.ContentItem);
 
       Services.Notifier.Information(T("Episode deleted"));
+
+      // invalidate cache for this item...
+      _signals.Trigger(string.Format("Contrib.Podcasts[{0}].FeedItem[{1}]_Evict", podcastId, episodeId));
+      _signals.Trigger("Contrib.Podcasts.Episodes_Evict");
 
       return Redirect(Url.PodcastForAdmin(podcast.As<PodcastPart>()));
     }
