@@ -144,12 +144,37 @@ namespace Contrib.Podcasts.Feeds {
           new XAttribute("length", Convert.ToInt32(podcastEpisodesDetail.EnclosureFilesize)),
           new XAttribute("type", "audio/mpeg")));
       }
+
+      // get the description of the item... join the description with the show notes
+      var showDescriptionShort = string.Empty;
+      var showDescriptionLong = string.Empty;
       if (episodePart.Description != null) {
-        var description = HttpUtility.HtmlEncode(episodePart.Description);
-        updatedFeedElement.SetElementValue("description", description);
-        updatedFeedElement.Add(new XElement(itunesNS + "subtitle", description));
-        updatedFeedElement.Add(new XElement(itunesNS + "summary", description));
+        showDescriptionShort = episodePart.Description;
+        showDescriptionLong = string.Format("<p>{0}</p>", showDescriptionShort);
       }
+      var showNotes = podcastEpisodesDetail.Fields.First(f => f.Name == "ShowNotes");
+      if (showNotes != null) {
+        if (!string.IsNullOrEmpty(showNotes.Storage.Get<string>(null))) {
+          var showNotesContents = showNotes.Storage.Get<string>(null);
+          showNotesContents = string.Format("<p>Notes:{0}</p>", showNotesContents);
+          showDescriptionLong = string.Concat(showDescriptionLong, showNotesContents);
+        }
+      }
+
+      if (!string.IsNullOrEmpty(showDescriptionLong)) {
+        // clear out the description field...
+        updatedFeedElement.SetElementValue("description", string.Empty);
+        // replace it with rich text
+        updatedFeedElement.Element("description").Add(new XCData(showDescriptionLong));
+        updatedFeedElement.Add(new XElement(itunesNS + "subtitle", new XCData(showDescriptionLong)));
+        updatedFeedElement.Add(new XElement(itunesNS + "summary", new XCData(showDescriptionLong)));
+      } else if (!string.IsNullOrEmpty(showDescriptionShort)) {
+        // replace the description field
+        updatedFeedElement.SetElementValue("description", showDescriptionShort);
+      }
+
+
+      // people involved
       var hosts = from host in podcastEpisodesDetail.Hosts
                   orderby host.Name
                   select host.Name;
