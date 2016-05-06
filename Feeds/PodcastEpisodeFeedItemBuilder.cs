@@ -190,6 +190,7 @@ namespace Contrib.Podcasts.Feeds {
       updatedFeedElement.Add(new XElement(itunesNS + "explicit", podcastPart.Rating == SimpleRatingTypes.NonAdult ? "no" : "yes"));
       updatedFeedElement.Add(new XElement(itunesNS + "block", "no"));
       updatedFeedElement.Add(new XElement(dcNS + "creator", hostList));
+      updatedFeedElement.Add(new XElement("category", new XCData("Episodes")));
 
       return updatedFeedElement;
     }

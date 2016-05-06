@@ -147,6 +147,15 @@ namespace Contrib.Podcasts.Feeds {
           new XElement(syNS + "updateFrequency",
           podcastPart.UpdatePeriod));
 
+        // plain category
+        try {
+          var categories = JsonConvert.DeserializeObject<PodcastCategories>(podcastPart.PodcastCategories);
+          if (categories.Categories.Any()) {
+            context.Response.Element.Add(
+              new XElement("category", categories.Categories[0].Title));
+          }
+        } catch { }
+
         // itunes
         XNamespace itunesNS = "http://www.itunes.com/dtds/podcast-1.0.dtd";
         context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "itunes", itunesNS.NamespaceName));
@@ -188,7 +197,7 @@ namespace Contrib.Podcasts.Feeds {
         context.Response.Element.Add(
           new XElement(googlePlayNS + "image", podcastPart.LogoImageUrl));
 
-        // categories
+        // itunes:categories
         try {
           var categories = JsonConvert.DeserializeObject<PodcastCategories>(podcastPart.PodcastCategories);
           foreach (var category in categories.Categories) {
@@ -226,7 +235,8 @@ namespace Contrib.Podcasts.Feeds {
         context.Response.Element.Add(
           new XElement(mediaNS + "thumbnail",
           new XAttribute("url", podcastPart.LogoImageUrl)));
-        // categories
+ 
+        // media:categories
         try {
           var categories = JsonConvert.DeserializeObject<PodcastCategories>(podcastPart.PodcastCategories);
           foreach (var category in categories.Categories) {
