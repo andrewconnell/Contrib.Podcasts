@@ -85,11 +85,22 @@ namespace Contrib.Podcasts.Feeds {
       PodcastPart podcastPart = _podcastService.Get(containerId).As<PodcastPart>();
       var inspector = new ItemInspector(container, _contentManager.GetItemMetadata(container), _htmlFilters);
       if (context.Format == "rss") {
-        // add namespace
+        // add namespaces
         XNamespace dcNS = "http://purl.org/dc/elements/1.1/";
         context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "dc", dcNS.NamespaceName));
         XNamespace ccNS = "http://backend.userland.com/creativeCommonsRssModule";
         context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "creativeCommons", ccNS.NamespaceName));
+        XNamespace contentNS = "http://purl.org/rss/1.0/modules/content/";
+        context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "content", contentNS.NamespaceName));
+        XNamespace wfwNS = "http://wellformedweb.org/CommentAPI/";
+        context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "wfw", wfwNS.NamespaceName));
+        XNamespace atomNS = "http://www.w3.org/2005/Atom";
+        context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "atom", atomNS.NamespaceName));
+        XNamespace slashNS = "http://purl.org/rss/1.0/modules/slash/";
+        context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "slash", slashNS.NamespaceName));
+        XNamespace googlePlayNS = "http://www.google.com/schemas/play-podcasts/1.0";
+        context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "googleplay", googlePlayNS.NamespaceName));
+
 
         var podcastLink = new XElement("link");
         var imageLink = new XElement("link");
