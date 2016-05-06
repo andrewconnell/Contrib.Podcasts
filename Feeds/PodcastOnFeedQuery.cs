@@ -97,7 +97,7 @@ namespace Contrib.Podcasts.Feeds {
         context.Response.Element.SetElementValue("title", podcastPart.Title);
         context.Response.Element.Add(podcastLink);
         context.Response.Element.SetElementValue("description", podcastPart.Description);
-        context.Response.Element.Add(new XElement("lastBuildDate", DateTime.UtcNow.ToString("r")));
+        context.Response.Element.Add(new XElement("lastBuildDate", DateTime.UtcNow.ToString("ddd, dd MMM yyyy HH':'mm':'ss +0000")));
         context.Response.Element.Add(new XElement("copyright", "Copyright " + DateTime.UtcNow.ToString("yyyy") + " " + podcastPart.Title));
         context.Response.Element.Add(new XElement("ttl", "1440"));
 
