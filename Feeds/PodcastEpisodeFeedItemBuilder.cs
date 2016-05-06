@@ -132,7 +132,7 @@ namespace Contrib.Podcasts.Feeds {
 
       // set title
       Debug.WriteLine("Contrib.Podcast||" + string.Format("{0:000} | {1}", podcastEpisodesDetail.EpisodeNumber, podcastEpisodesDetail.Title));
-      updatedFeedElement.SetElementValue("title", string.Format("{0:000} | {1}", podcastEpisodesDetail.EpisodeNumber, podcastEpisodesDetail.Title));
+      updatedFeedElement.SetElementValue("title", string.Format("Episode {0:000} | {1}", podcastEpisodesDetail.EpisodeNumber, podcastEpisodesDetail.Title));
 
       if (inspector.PublishedUtc != null) {
         updatedFeedElement.SetElementValue("pubDate", inspector.PublishedUtc.Value.ToString("ddd, dd MMM yyyy HH':'mm':'ss +0000"));
