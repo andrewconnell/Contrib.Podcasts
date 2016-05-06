@@ -94,12 +94,8 @@ namespace Contrib.Podcasts.Feeds {
         context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "content", contentNS.NamespaceName));
         XNamespace wfwNS = "http://wellformedweb.org/CommentAPI/";
         context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "wfw", wfwNS.NamespaceName));
-        XNamespace atomNS = "http://www.w3.org/2005/Atom";
-        context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "atom", atomNS.NamespaceName));
         XNamespace slashNS = "http://purl.org/rss/1.0/modules/slash/";
         context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "slash", slashNS.NamespaceName));
-        XNamespace googlePlayNS = "http://www.google.com/schemas/play-podcasts/1.0";
-        context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "googleplay", googlePlayNS.NamespaceName));
 
 
         var podcastLink = new XElement("link");
@@ -185,6 +181,12 @@ namespace Contrib.Podcasts.Feeds {
         context.Response.Element.Add(
           new XElement(itunesNS + "keywords",
           podcastPart.Keywords));
+
+        // google play
+        XNamespace googlePlayNS = "http://www.google.com/schemas/play-podcasts/1.0";
+        context.Response.Element.Parent.Add(new XAttribute(XNamespace.Xmlns + "googleplay", googlePlayNS.NamespaceName));
+        context.Response.Element.Add(
+          new XElement(googlePlayNS + "image", podcastPart.LogoImageUrl));
 
         // categories
         try {
@@ -276,8 +278,8 @@ namespace Contrib.Podcasts.Feeds {
         .Where<CommonPartRecord>(x => x.Container == container.Record)
         .OrderByDescending(x => x.CreatedUtc)
         .List();
-        //.Slice(0, limit);   
-        // NOTE: ^^^^ removing limit on items returned... possibly add as configuration on each podcast in future
+      //.Slice(0, limit);   
+      // NOTE: ^^^^ removing limit on items returned... possibly add as configuration on each podcast in future
 
       foreach (var item in items) {
         context.Builder.AddItem(context, item);
