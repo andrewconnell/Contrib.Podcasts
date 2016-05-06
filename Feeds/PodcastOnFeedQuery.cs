@@ -64,10 +64,13 @@ namespace Contrib.Podcasts.Feeds {
       if (containerIdValue == null)
         return;
 
-      var limitValue = context.ValueProvider.GetValue("limit");
-      var limit = 50;
-      if (limitValue != null)
-        limit = (int)limitValue.ConvertTo(typeof(int));
+      // get limit of number of items to show in the RSS feed
+      //var limitValue = context.ValueProvider.GetValue("limit");
+      //var limit = 50;
+      //if (limitValue != null)
+      //  limit = (int)limitValue.ConvertTo(typeof(int));
+      // ^^^^ NOTE: removing this limit... possibly add as a new field per podcast in future
+      //            see below where query for items to see how hti sis not used
 
       var containerId = (int)containerIdValue.ConvertTo(typeof(int));
       var container = _contentManager.Get(containerId);
@@ -261,7 +264,9 @@ namespace Contrib.Podcasts.Feeds {
       var items = _contentManager.Query()
         .Where<CommonPartRecord>(x => x.Container == container.Record)
         .OrderByDescending(x => x.CreatedUtc)
-        .Slice(0, limit);
+        .List();
+        //.Slice(0, limit);   
+        // NOTE: ^^^^ removing limit on items returned... possibly add as configuration on each podcast in future
 
       foreach (var item in items) {
         context.Builder.AddItem(context, item);

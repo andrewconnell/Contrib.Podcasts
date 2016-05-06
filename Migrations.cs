@@ -51,6 +51,17 @@ namespace Contrib.Podcasts {
       return 3;
     }
 
+    public int UpdateFrom3() {
+      UpdateTableWithIndexesTo4();
+
+      return 4;
+    }
+    public int UpdateFrom4() {
+      UpdateTableWithIndexesTo5();
+
+      return 5;
+    }
+
     private void CreateRecentEpisodesWidget() {
       SchemaBuilder.CreateTable("RecentPodcastEpisodesPartRecord", table => table
         .ContentPartRecord()
@@ -218,6 +229,32 @@ namespace Contrib.Podcasts {
         .AddColumn<string>("Description", c => c.Unlimited())
         );
     }
+
+    /// <summary>
+    /// Adds indexes to the two tables primarily used to find people involved with an episode. Updates the DB table to v1.3
+    /// </summary>
+    private void UpdateTableWithIndexesTo4() {
+      // add indexes to person tables
+      SchemaBuilder.AlterTable("PodcastHostRecord",
+        table => table
+          .CreateIndex("IDX_PodcastHostRecord_PodcastPartRecordId", "PodcastPartRecord_Id")
+      );
+      SchemaBuilder.AlterTable("EpisodePersonRecord",
+        table => table
+          .CreateIndex("IDX_EpisodePersonRecord_PodcastEpisodePartRecordId_IsHost", "PodcastEpisodePartRecord_Id", "IsHost")
+      );
+    }
+    /// <summary>
+    /// Add index to table of podcasts
+    /// </summary>
+    private void UpdateTableWithIndexesTo5() {
+      // add indexes to person tables
+      SchemaBuilder.AlterTable("PodcastEpisodePartRecord",
+        table => table
+          .CreateIndex("IDXPodcastEpisodePartRecord_PodcastId", "PodcastId")
+      );
+    }
+
 
 #if DEBUG
     private void SampleDataCreatePeople() {
