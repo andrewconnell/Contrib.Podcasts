@@ -23,20 +23,21 @@
 <fieldset>
   <legend>Episode Details</legend>
   @Html.LabelFor(m => m.EpisodeNumber, T("Episode Number"))
-  @Html.TextBoxFor(m => m.EpisodeNumber)
+  @Html.TextBoxFor(m => m.EpisodeNumber, new { @class = "text small" })
 
   @Html.LabelFor(m => m.EnclosureUrl, T("Fully Qualified URL to Episode MP3"))
-  @Html.TextBoxFor(m => m.EnclosureUrl)
+  @Html.TextBoxFor(m => m.EnclosureUrl, new { @class = "text large" })
 
   @Html.LabelFor(m => m.EnclosureFileSize, T("Size of Episode MP3 in bytes"))
-  @Html.TextBoxFor(m => m.EnclosureFileSize)
+  @Html.TextBoxFor(m => m.EnclosureFileSize, new { @class = "text medium" })
 
-  @Html.LabelFor(m => m.Duration, T("Length of Episode (ie: mm:ss)"))
-  @Html.TextBoxFor(m => m.Duration)
+  @Html.LabelFor(m => m.Duration, T("Length of Episode"))
+  @Html.TextBoxFor(m => m.Duration, new { @class = "text medium", @placeholder = "hh:mm:ss" })
+  <span class="hint">Use the format of hh:mm:ss (omit hours if less than one (1) hour).</span>
 
   @Html.LabelFor(m => m.Rating, T("Rating"))
   @Html.DropDownListFor(m => m.Rating, ratingSelectListItems)
-  <span class="hint">Defalts to the setting for the podcast.</span>
+  <span class="hint">Defaults to the setting for the podcast.</span>
 </fieldset>
 
 <fieldset>
@@ -129,4 +130,5 @@
     });
     //]]>
   </script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-placeholder/2.3.1/jquery.placeholder.min.js"></script>
 }

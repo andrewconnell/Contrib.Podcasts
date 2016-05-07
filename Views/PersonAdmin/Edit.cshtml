@@ -7,18 +7,19 @@
 @using (Html.BeginFormAntiForgeryPost("Edit")) {
   @Html.HiddenFor(m => m.Id)
   @Html.LabelFor(m => m.Name, T("Full Name (first & last name)"))
-  @Html.TextBoxFor(m => m.Name)
+  @Html.TextBoxFor(m => m.Name, new { @class = "text medium" })
   @Html.ValidationMessageFor(m => m.Name)
 
   @Html.LabelFor(m => m.Email)
-  @Html.TextBoxFor(m => m.Email)
+  @Html.TextBoxFor(m => m.Email, new { @class = "text medium" })
   
   @Html.LabelFor(m => m.Url, T("Blog URL or other Website used for name Hyperlink"))
-  @Html.TextBoxFor(m => m.Url)
+  @Html.TextBoxFor(m => m.Url, new { @class = "text large" })
   <span class="hint">If nothing entered, the person's name will not be hyperlinked on the site.</span>
 
-  @Html.LabelFor(m => m.TwitterName, T("Twitter handle (just the name, not full URL"))
-  @Html.TextBoxFor(m => m.TwitterName)
+  @Html.LabelFor(m => m.TwitterName, T("Twitter"))
+  @Html.TextBoxFor(m => m.TwitterName, new { @class = "text medium" })
+  <span class="hint">Enter just the @@twitterhandle, not the full URL to the Twitter profile.</span>
 
   <div style="margin-top: 10px;">
     <button type="submit" class="primaryAction">@T("Save")</button>

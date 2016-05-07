@@ -23,7 +23,7 @@
 <fieldset>
   <legend>@T("Podcast Settings")</legend>
   @Html.LabelFor(m => m.ContactEmail, T("Contact Email"))
-  @Html.TextBoxFor(m => m.ContactEmail)
+  @Html.TextBoxFor(m => m.ContactEmail, new { @class = "text medium" })
 </fieldset>
 
 <fieldset>
@@ -40,13 +40,13 @@
 
 <fieldset>
   @Html.LabelFor(m => m.CultureCode, T("Culture Code"))
-  @Html.TextBoxFor(m => m.CultureCode)
+  @Html.TextBoxFor(m => m.CultureCode, new { @class = "text small" })
   <span class="hint">Indicates the target culture of the podcast (ie: en-US). Used in the RSS feed, primarily used by iTunes.</span>
 </fieldset>
 
 <fieldset>
   @Html.LabelFor(m => m.Keywords)
-  @Html.TextBoxFor(m => m.Keywords)
+  @Html.TextBoxFor(m => m.Keywords, new { @class = "text large" })
   <span class="hint">Used in the RSS feed, primarily used by iTunes.</span>
 </fieldset>
 
@@ -59,7 +59,7 @@
 
 <fieldset>
   @Html.LabelFor(m => m.LogoImageUrl, T("Logo Image URL"))
-  @Html.TextBoxFor(m => m.LogoImageUrl)
+  @Html.TextBoxFor(m => m.LogoImageUrl, new { @class = "text large" })
   <span class="hint">Used in the RSS feed.</span>
 </fieldset>
 
@@ -84,13 +84,13 @@
 <fieldset>
   <legend>Feed Update Suggestion</legend>
   @Html.LabelFor(m => m.UpdateFrequency, T("Update Frequency"))
-  @Html.TextBoxFor(m => m.UpdateFrequency)
+  @Html.TextBoxFor(m => m.UpdateFrequency, new { @class = "text small" })
   <span class="hint">Suggestion for clients how often the feed should be checked (ie: hourly).</span>
 </fieldset>
 
 <fieldset>
   @Html.LabelFor(m => m.UpdatePeriod, T("Update Period"))
-  @Html.TextBoxFor(m => m.UpdatePeriod)
+  @Html.TextBoxFor(m => m.UpdatePeriod, new { @class = "text small" })
   <span class="hint">How often it should be checked using the specified update frequency (ie: 1).</span>
 </fieldset>
 
