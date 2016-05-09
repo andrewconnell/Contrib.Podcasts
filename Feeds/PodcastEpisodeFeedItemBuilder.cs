@@ -150,6 +150,7 @@ namespace Contrib.Podcasts.Feeds {
       var showDescriptionLong = string.Empty;
       if (episodePart.Description != null) {
         showDescriptionShort = episodePart.Description;
+        updatedFeedElement.Add(new XElement(itunesNS + "subtitle", new XCData(showDescriptionShort)));
         showDescriptionLong = string.Format("<p>{0}</p>", showDescriptionShort);
       }
       var showNotes = podcastEpisodesDetail.Fields.First(f => f.Name == "ShowNotes");
@@ -166,7 +167,6 @@ namespace Contrib.Podcasts.Feeds {
         updatedFeedElement.SetElementValue("description", string.Empty);
         // replace it with rich text
         updatedFeedElement.Element("description").Add(new XCData(showDescriptionLong));
-        updatedFeedElement.Add(new XElement(itunesNS + "subtitle", new XCData(showDescriptionLong)));
         updatedFeedElement.Add(new XElement(itunesNS + "summary", new XCData(showDescriptionLong)));
       } else if (!string.IsNullOrEmpty(showDescriptionShort)) {
         // replace the description field
@@ -181,8 +181,8 @@ namespace Contrib.Podcasts.Feeds {
       var guests = from guest in podcastEpisodesDetail.Guests
                    orderby guest.Name
                    select guest.Name;
-      var hostList = string.Join(",", hosts.ToArray());
-      var participantList = string.Join(",", (hosts.Concat(guests)).ToArray());
+      var hostList = string.Join(", ", hosts.ToArray());
+      var participantList = string.Join(", ", (hosts.Concat(guests)).ToArray());
 
       updatedFeedElement.Add(new XElement(itunesNS + "duration", podcastEpisodesDetail.Duration));
       updatedFeedElement.Add(new XElement(itunesNS + "keywords", "Episodes"));

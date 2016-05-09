@@ -129,7 +129,7 @@ namespace Contrib.Podcasts.Feeds {
         var hosts = from host in podcastPart.Hosts
                     orderby host.Name
                     select host.Name;
-        var hostList = string.Join(",", hosts.ToArray());
+        var hostList = string.Join(", ", hosts.ToArray());
         System.Diagnostics.Debug.WriteLine("Podcast.PodcastOnFeedQuery.Execute.GetHosts.End");
 
         context.Response.Element.Add(new XElement("managingEditor", hostList));
@@ -170,16 +170,14 @@ namespace Contrib.Podcasts.Feeds {
           new XElement(itunesNS + "block",
           "no"));
         context.Response.Element.Add(
-          new XElement(itunesNS + "author",
-          string.Join(",", hosts.ToArray())));
+          new XElement(itunesNS + "author", hostList));
         context.Response.Element.Add(
           new XElement(itunesNS + "explicit",
           podcastPart.Rating == SimpleRatingTypes.NonAdult ? "no" : "yes"));
 
         var itunesOwner = new XElement(itunesNS + "owner");
         itunesOwner.Add(
-          new XElement(itunesNS + "name",
-            string.Join(",", hosts.ToArray())));
+          new XElement(itunesNS + "name", hostList));
         itunesOwner.Add(
           new XElement(itunesNS + "email",
             podcastPart.ContactEmail));
@@ -227,15 +225,14 @@ namespace Contrib.Podcasts.Feeds {
           podcastPart.Rating.ToString().ToLower()));
         context.Response.Element.Add(
           new XElement(mediaNS + "credit",
-          new XAttribute("role", "owner"),
-          string.Join(",", hosts.ToArray())));
+          new XAttribute("role", "owner"), hostList));
         context.Response.Element.Add(
           new XElement(mediaNS + "keywords",
           podcastPart.Keywords));
         context.Response.Element.Add(
           new XElement(mediaNS + "thumbnail",
           new XAttribute("url", podcastPart.LogoImageUrl)));
- 
+
         // media:categories
         try {
           var categories = JsonConvert.DeserializeObject<PodcastCategories>(podcastPart.PodcastCategories);
