@@ -102,6 +102,7 @@
     <Compile Include="Controllers\PodcastEpisodeController.cs" />
     <Compile Include="Drivers\PodcastEpisodePartDriver.cs" />
     <Compile Include="Drivers\RecentPodcastEpisodesDriver.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Feeds\PodcastOnFeedQuery.cs" />
     <Compile Include="Feeds\PodcastEpisodeFeedItemBuilder.cs" />

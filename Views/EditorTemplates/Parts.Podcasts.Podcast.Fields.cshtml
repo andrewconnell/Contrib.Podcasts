@@ -1,4 +1,5 @@
-﻿@using Contrib.Podcasts.Models
+﻿@using Contrib.Podcasts.Extensions;
+@using Contrib.Podcasts.Models
 @using Contrib.Podcasts.ViewModels
 
 @model PodcastViewModel
@@ -8,9 +9,17 @@
 
   // create select box options for form
   var ratingSelectListItems = Enum.GetNames(typeof(SimpleRatingTypes))
-                                  .Select(r => new SelectListItem { Text = r, Value = r, Selected = r == Model.Rating.ToString() });
+                                  .Select(r => new SelectListItem {
+                                    Text = r.SplitCamelCase(),
+                                    Value = r,
+                                    Selected = r == Model.Rating.ToString()
+                                  });
   var licenseSelectListItems = Enum.GetNames(typeof(CreativeCommonsLicenseTypes))
-                                  .Select(r => new SelectListItem { Text = r, Value = r, Selected = r == Model.License.ToString() });
+                                  .Select(r => new SelectListItem {
+                                    Text = r.SplitCamelCase(),
+                                    Value = r,
+                                    Selected = r == Model.License.ToString()
+                                  });
 
   // get list of selected hosts
   List<PersonRecord> selectedHosts = Model.Hosts.Select(hostId => Model.AvailablePeople.First(p => p.Id == hostId)).ToList();

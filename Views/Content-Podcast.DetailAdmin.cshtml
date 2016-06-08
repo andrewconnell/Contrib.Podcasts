@@ -5,7 +5,13 @@
 
 @{
   Layout.Title = (string)Model.Title;
-  var podcast = Model.ContentItem.Get(typeof (PodcastPart));
+  var podcast = Model.ContentItem.Get(typeof(PodcastPart));
+
+  string rating = podcast.Rating.ToString();
+  rating = rating.SplitCamelCase();
+
+  string license = podcast.CreativeCommonsLicense.ToString();
+  license = license.SplitCamelCase();
 }
 
 
@@ -14,6 +20,6 @@
 <div class="manage"><a href="@Url.PodcastEpisodeCreate((PodcastPart)Model.ContentItem.Get(typeof(PodcastPart)))" class="add button primaryAction">@T("New Episode")</a></div>
 
 <h1>@T(podcast.Title)</h1>
-<strong>Rating:</strong> @T(podcast.Rating.ToString()) | <strong>Creative Commons License:</strong> @T(podcast.CreativeCommonsLicense.ToString())
+<strong>Rating:</strong> @T(rating) | <strong>Creative Commons License:</strong> @T(license)
 
 @Display(Model.Content)
