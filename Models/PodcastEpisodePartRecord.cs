@@ -35,6 +35,11 @@ namespace Contrib.Podcasts.Models {
     /// </summary>
     public virtual decimal EnclosureFilesize { get; set; }
 
+    /// <summary>
+    /// URL of the logo image to include in the RSS feed.
+    /// </summary>
+    public virtual string EpisodeImageUrl { get; set; }
+
     public PodcastEpisodePartRecord() {
       PodcastPeople = new List<EpisodePersonRecord>();
     }

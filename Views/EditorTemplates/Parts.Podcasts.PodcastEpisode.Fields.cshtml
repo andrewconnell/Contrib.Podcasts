@@ -38,6 +38,10 @@
   @Html.LabelFor(m => m.Rating, T("Rating"))
   @Html.DropDownListFor(m => m.Rating, ratingSelectListItems)
   <span class="hint">Defaults to the setting for the podcast.</span>
+
+  @Html.LabelFor(m => m.EpisodeImageUrl, T("Episode Image URL"))
+  @Html.TextBoxFor(m => m.EpisodeImageUrl, new { @class = "text large" })
+  <span class="hint">Used in the RSS feed. According to <a href="https://help.apple.com/itc/podcasts_connect/#/itcb54353390" target="_blank">iTunes requirements</a>, this should be no smaller than 1400 x 1400 pixels, no larger than 3000 x 3000 pixels, a JPEG/PNG format, in the RGB colorspace and 72 dpi.</span>
 </fieldset>
 
 <fieldset>

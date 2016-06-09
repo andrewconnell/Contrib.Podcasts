@@ -56,6 +56,11 @@ namespace Contrib.Podcasts.Models {
       set { Record.Rating = value; }
     }
 
+    public string EpisodeImageUrl {
+      get { return Record.EpisodeImageUrl; }
+      set { Record.EpisodeImageUrl = value; }
+    }
+
     public IEnumerable<PersonRecord> Hosts {
       get { return Record.PodcastPeople.ToList().Where(p => p.IsHost == true).Select(p => p.PersonRecord); }
     }

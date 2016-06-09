@@ -121,6 +121,7 @@ namespace Contrib.Podcasts.Services {
       part.EpisodeNumber = viewModel.EpisodeNumber;
       part.EnclosureUrl = viewModel.EnclosureUrl;
       part.EnclosureFilesize = viewModel.EnclosureFileSize;
+      part.EpisodeImageUrl = viewModel.EpisodeImageUrl;
       part.Duration = viewModel.Duration;
       part.Rating = viewModel.Rating;
 
