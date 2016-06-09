@@ -12,6 +12,7 @@ namespace Contrib.Podcasts.ViewModels {
     public string Duration { get; set; }
     public int EnclosureFileSize { get; set; }
     public SimpleRatingTypes Rating { get; set; }
+    public string EpisodeImageUrl { get; set; }
 
     public IEnumerable<PersonRecord> AvailablePeople { get; set; }
     public IEnumerable<int> Hosts { get; set; }

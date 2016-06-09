@@ -78,7 +78,7 @@ namespace Contrib.Podcasts.Feeds {
         var feedElement = feedItem.Element;
 
         // update the element's XML
-        feedElement = UpdateFeedItem(podcastPart, inspector, feedItem.Item.Id, feedElement);
+        feedElement = UpdateFeedItem(context, podcastPart, inspector, feedItem.Item.Id, feedElement);
 
         Debug.WriteLine("Contrib.Podcast|ElapsedTime: " + DateTime.UtcNow.Subtract(timerStart).TotalSeconds);
       }
@@ -95,7 +95,7 @@ namespace Contrib.Podcasts.Feeds {
     /// <param name="feedItemId">Id of feed item to update</param>
     /// <param name="baseFeedElement">Orchard RSS feed item</param>
     /// <returns></returns>
-    private XElement UpdateFeedItem(PodcastPart podcastPart, ItemInspector inspector, int feedItemId, XElement baseFeedElement) {
+    private XElement UpdateFeedItem(FeedContext context, PodcastPart podcastPart, ItemInspector inspector, int feedItemId, XElement baseFeedElement) {
       XNamespace itunesNS = "http://www.itunes.com/dtds/podcast-1.0.dtd";
       XNamespace dcNS = "http://purl.org/dc/elements/1.1/";
 
@@ -134,16 +134,36 @@ namespace Contrib.Podcasts.Feeds {
       Debug.WriteLine("Contrib.Podcast||" + string.Format("{0:000} | {1}", podcastEpisodesDetail.EpisodeNumber, podcastEpisodesDetail.Title));
       updatedFeedElement.SetElementValue("title", string.Format("Episode {0:000} | {1}", podcastEpisodesDetail.EpisodeNumber, podcastEpisodesDetail.Title));
 
-      if (inspector.PublishedUtc != null) {
-        updatedFeedElement.SetElementValue("pubDate", inspector.PublishedUtc.Value.ToString("ddd, dd MMM yyyy HH':'mm':'ss +0000"));
+
+      // add publish date
+      DateTime? pubDate = null;
+      try {
+        // try to get the set release date of the episode
+        var releaseDateContentItem = podcastEpisodesDetail.Fields.First(f => f.Name == "ReleaseDate");
+        if (releaseDateContentItem != null) {
+          var releaseDate = releaseDateContentItem.Storage.Get<DateTime?>(null);
+          if (releaseDate != null && releaseDate.HasValue && releaseDate.Value != DateTime.MinValue)
+            pubDate = releaseDate.Value;
+        }
+      } catch { }
+      // if no release date, get the publish date
+      if (pubDate == null && inspector.PublishedUtc != null) {
+        pubDate = inspector.PublishedUtc.Value;
+      }
+      // if have a pub date now, show it
+      if (pubDate.HasValue) {
+        updatedFeedElement.SetElementValue("pubDate", pubDate.Value.ToString("R")); // use RFC2822 | RFC1123
       }
 
+
+      // episode enclosure
       if (podcastEpisodesDetail.EnclosureUrl != null) {
         updatedFeedElement.Add(new XElement("enclosure",
           new XAttribute("url", podcastEpisodesDetail.EnclosureUrl),
           new XAttribute("length", Convert.ToInt32(podcastEpisodesDetail.EnclosureFilesize)),
           new XAttribute("type", "audio/mpeg")));
       }
+
 
       // get the description of the item... join the description with the show notes
       var showDescriptionShort = string.Empty;
@@ -162,6 +182,7 @@ namespace Contrib.Podcasts.Feeds {
         }
       }
 
+
       if (!string.IsNullOrEmpty(showDescriptionLong)) {
         // clear out the description field...
         updatedFeedElement.SetElementValue("description", string.Empty);
@@ -172,6 +193,13 @@ namespace Contrib.Podcasts.Feeds {
         // replace the description field
         updatedFeedElement.SetElementValue("description", showDescriptionShort);
       }
+
+
+      // add episode image
+      if (!string.IsNullOrEmpty(episodePart.EpisodeImageUrl)) {
+        updatedFeedElement.Add(new XElement(itunesNS + "image", episodePart.EpisodeImageUrl));
+      }
+
 
 
       // people involved

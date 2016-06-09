@@ -56,10 +56,17 @@ namespace Contrib.Podcasts {
 
       return 4;
     }
+
     public int UpdateFrom4() {
       UpdateTableWithIndexesTo5();
 
       return 5;
+    }
+
+    public int UpdateFrom5() {
+      AddPodcastEpisodeFieldsImageReleaseDate();
+
+      return 6;
     }
 
     private void CreateRecentEpisodesWidget() {
@@ -167,7 +174,7 @@ namespace Contrib.Podcasts {
         .Draftable()
         );
 
-      // create fields fields
+      // create fields
       ContentDefinitionManager.AlterPartDefinition("PodcastEpisodePart", builder => builder
         .WithField("RecordedDate", fieldBuilder => fieldBuilder
           .OfType("DateTimeField")
@@ -244,6 +251,7 @@ namespace Contrib.Podcasts {
           .CreateIndex("IDX_EpisodePersonRecord_PodcastEpisodePartRecordId_IsHost", "PodcastEpisodePartRecord_Id", "IsHost")
       );
     }
+
     /// <summary>
     /// Add index to table of podcasts
     /// </summary>
@@ -255,6 +263,26 @@ namespace Contrib.Podcasts {
       );
     }
 
+    /// <summary>
+    /// Adds two new fields to the podcast episode table. 
+    /// One is for a unique image to be used for each podcast episode (EpisodeImageUrl) & one
+    /// is to have a new ReleaseDate field that will hold the timestamp of when the episode
+    /// is released.
+    /// </summary>
+    private void AddPodcastEpisodeFieldsImageReleaseDate() {
+      // add episode release date (which can be different from Orchard's publish date
+      ContentDefinitionManager.AlterPartDefinition("PodcastEpisodePart", builder => builder
+        .WithField("ReleaseDate", fieldBuilder => fieldBuilder
+          .OfType("DateTimeField")
+          .WithDisplayName("Release Date")
+        )
+      );
+
+      // add field for episode image
+      SchemaBuilder.AlterTable("PodcastEpisodePartRecord", t => t
+       .AddColumn<string>("EpisodeImageUrl", c => c.WithLength(300))
+       );
+    }
 
 #if DEBUG
     private void SampleDataCreatePeople() {

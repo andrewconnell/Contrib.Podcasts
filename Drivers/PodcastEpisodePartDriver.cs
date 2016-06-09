@@ -34,7 +34,8 @@ namespace Contrib.Podcasts.Drivers {
       _cultureInfo = new Lazy<CultureInfo>(() => CultureInfo.GetCultureInfo(Services.WorkContext.CurrentCulture));
     }
 
-    protected override string Prefix {
+    protected override string Prefix
+    {
       get { return "PodcastEpisode"; }
     }
 
@@ -48,11 +49,18 @@ namespace Contrib.Podcasts.Drivers {
       dynamic episodeType = _contentManager.Query().ForType("PodcastEpisode").List().First(x => x.Record.Id == part.Id);
       var episodePart = episodeType.PodcastEpisodePart;
       var recordedDateTime = episodePart.RecordedDate.DateTime;
+      DateTime? releaseDateTime = (episodePart.ReleaseDate.DateTime != null && episodePart.ReleaseDate.DateTime != DateTime.MinValue)
+        ? episodePart.ReleaseDate.DateTime
+        : part.PublishedUtc;
 
       if (displayType.StartsWith("Detail")) {
         // show metadata
         shapes.Add(ContentShape("Parts_Podcasts_PodcastEpisode_Metadata", () =>
-          shapeHelper.Parts_Podcasts_PodcastEpisode_Metadata(Episode: part, RecordedDate: recordedDateTime)
+          shapeHelper.Parts_Podcasts_PodcastEpisode_Metadata(
+            Episode: part,
+          RecordedDate: recordedDateTime,
+          ReleaseDate: releaseDateTime
+          )
         ));
 
         // show hosts
@@ -123,11 +131,12 @@ namespace Contrib.Podcasts.Drivers {
         EnclosureFileSize = Convert.ToInt32(part.EnclosureFilesize),
         Duration = part.Duration,
         Rating = part.Rating,
+        EpisodeImageUrl = part.EpisodeImageUrl,
         AvailablePeople = _personRepository.Table.OrderBy(p => p.Name).ToList(),
         Hosts = part.Hosts.Any()
                 ? part.Hosts.Select(h => h.Id).ToList()
                 : part.PodcastPart.Hosts.Select(h => h.Id).ToList(),
-        Guests = part.Guests.Select(g => g.Id).ToList(),
+        Guests = part.Guests.Select(g => g.Id).ToList()
       };
     }
   }
